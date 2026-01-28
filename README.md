@@ -1,8 +1,8 @@
-# 🏛️ Temple Management System - Backend API
+# Temple Management System - Backend API
 
 A robust, production-ready Node.js/Express backend API for the Temple Management System. This API serves as the central backend for the Admin Portal, Public Website, and Mobile App, providing comprehensive temple management capabilities including user management, events, volunteers, finances, CMS, and payment processing.
 
-## 🏗️ Architecture
+## Architecture
 
 - **Runtime**: Node.js 18+ with Express.js
 - **Database**: Supabase (PostgreSQL) with MongoDB legacy support
@@ -12,42 +12,42 @@ A robust, production-ready Node.js/Express backend API for the Temple Management
 - **Payment Processing**: PayPal Integration
 - **Security**: Helmet, CORS, Rate Limiting
 
-## ✨ Key Features
+## Key Features
 
-### 🔐 Authentication & Authorization
+### Authentication & Authorization
 - JWT-based authentication
 - Multi-role RBAC system (Admin, Chairman, Finance, Priest, Volunteer, Community roles)
 - Password hashing with bcrypt
 - Session management
 
-### 👥 User Management
+### User Management
 - User registration and authentication
 - Role-based access control
 - User profile management
 - Password reset functionality
 
-### 🏘️ Community Management
+### Community Management
 - Community CRUD operations
 - Member management and applications
 - Community tasks and assignments
 - Community statistics and analytics
 - Timeline and announcements
 
-### 📅 Event Management
+### Event Management
 - Event creation and management
 - Recurring events support
 - Event registration
 - Public and private events
 - Event uploads and media
 
-### 💰 Financial Management
+### Financial Management
 - Donation tracking and processing
 - Expense management with file attachments
 - Budget requests and approvals
 - Financial reports and reconciliation
 - PayPal payment integration
 
-### 🎨 Content Management System (CMS)
+### Content Management System (CMS)
 - Banner management (4 banner slots)
 - Puja catalog management
 - Gallery management
@@ -56,26 +56,26 @@ A robust, production-ready Node.js/Express backend API for the Temple Management
 - Bal Vidya Mandir content
 - Sai Aangan content
 
-### 👨‍💼 Priest Management
+### Priest Management
 - Priest directory
 - Booking management system
 - Availability calendar
 - Confirmation email system
 
-### 🤝 Volunteer Management
+### Volunteer Management
 - Volunteer registration
 - Shift scheduling
 - Attendance tracking (check-in/check-out)
 - Hours tracking and reporting
 
-### 📊 Reporting & Analytics
+### Reporting & Analytics
 - Financial reports
 - Community analytics
 - Event analytics
 - Volunteer reports
 - Custom report generation
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -111,7 +111,7 @@ src/
 └── server.js           # Main application entry point
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -192,7 +192,7 @@ MONGODB_URI=mongodb://localhost:27017/temple_db
    npm run seed
    ```
 
-## 📚 API Documentation
+## API Documentation
 
 ### Base URL
 ```
@@ -275,7 +275,7 @@ Authorization: Bearer <your_jwt_token>
 
 Full API documentation is available in [`docs/API_ENDPOINTS.md`](docs/API_ENDPOINTS.md).
 
-## 🔐 Role-Based Access Control
+## Role-Based Access Control
 
 The API supports multiple user roles with hierarchical permissions:
 
@@ -292,7 +292,7 @@ The API supports multiple user roles with hierarchical permissions:
 | `community_owner` | Community owner | Community ownership |
 | `community_member` | Community member | Basic community access |
 
-## 🧪 Development
+## Development
 
 ```bash
 # Run in development mode with auto-reload (nodemon)
@@ -316,7 +316,7 @@ npm run seed
 - **CORS**: Cross-origin resource sharing
 - **Express Rate Limit**: API rate limiting
 
-## 🏥 Health Check
+## Health Check
 
 ```bash
 curl http://localhost:5000/health
@@ -332,7 +332,7 @@ Response:
 }
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run tests (if test suite is configured)
@@ -342,7 +342,7 @@ npm test
 npm run test:coverage
 ```
 
-## 📦 Deployment
+## Deployment
 
 ### Railway (Recommended)
 
@@ -369,7 +369,7 @@ EXPOSE 5000
 CMD ["npm", "start"]
 ```
 
-## 🔒 Security Features
+## Security Features
 
 - **JWT Authentication**: Secure token-based authentication
 - **Password Hashing**: bcrypt with salt rounds
@@ -380,19 +380,19 @@ CMD ["npm", "start"]
 - **SQL Injection Protection**: Parameterized queries via Supabase
 - **File Upload Validation**: Type and size restrictions
 
-## 📊 Monitoring & Logging
+## Monitoring & Logging
 
 - **Activity Logging**: User actions logged to database
 - **Error Logging**: Centralized error handling
 - **Request Logging**: Morgan HTTP logger
 - **Email Logging**: Email send status tracking
 
-## 🔗 Related Repositories
+## Related Repositories
 
 - [Admin Portal](https://github.com/cgchiraggupta/admin--portal-) - Admin Dashboard (React/Vite)
 - [Public Website](https://github.com/cgchiraggupta/public-website-) - Public Website (Next.js)
 
-## 📝 API Response Format
+## API Response Format
 
 ### Success Response
 ```json
@@ -412,7 +412,7 @@ CMD ["npm", "start"]
 }
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -430,18 +430,18 @@ CMD ["npm", "start"]
 | CORS | Cross-origin support |
 | Morgan | HTTP logging |
 
-## 📄 License
+## License
 
 Private - Temple Management System
 
-## 👥 Contributing
+## Contributing
 
 1. Create a feature branch from `main`
 2. Make your changes
 3. Test thoroughly
 4. Submit a pull request
 
-## 📞 Support
+## Support
 
 For issues and questions, please open an issue on GitHub or contact the development team.
 
