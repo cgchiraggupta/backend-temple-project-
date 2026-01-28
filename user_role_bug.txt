@@ -1,0 +1,132 @@
+🚨 Identified Flaws in the Role System - STATUS UPDATE
+======================================================
+Last Updated: December 13, 2024
+
+## Summary
+
+| # | Issue | Status | Notes |
+|---|-------|--------|-------|
+| 1 | Single Role Limitation | ❌ NOT FIXED | Requires DB schema change |
+| 2 | Inconsistent Role Storage | ✅ FIXED | assign-role now updates both tables |
+| 3 | Role Check Middleware Not Aligned | ⚠️ MITIGATED | assign-role now updates users.role |
+| 4 | Variable Scope Bug | ✅ FIXED | Fixed in both files |
+| 5 | No Role Hierarchy/Permissions | ❌ NOT FIXED | Major refactor needed |
+| 6 | Email Duplication Check | ✅ ALREADY EXISTS | Was already implemented |
+| 7 | assign-role Uses Wrong API | ✅ FIXED | Now queries users table |
+| 8 | Volunteer No User Creation | ✅ ALREADY EXISTS | Fixed linking bug |
+| 9 | Password Reset No Session Invalidation | ✅ FIXED | Implemented password_changed_at |
+
+---
+
+## FIXED ISSUES
+
+### #2 - Inconsistent Role Storage ✅
+**File**: `src/routes/admin.js`
+**Fix**: assign-role endpoint now updates BOTH:
+- `users.role` column (primary source of truth)
+- `user_roles` table (backward compatibility)
+
+### #4 - Variable Scope Bug ✅
+**Files**: 
+- `src/services/community/applicationService-fixed.js`
+- `src/routes/volunteers-simple.js`
+
+**Fix**: `newUser` variable declared in outer scope so it's accessible for user-to-volunteer/member linking.
+
+```javascript
+// BEFORE (broken)
+if (!existingUser) {
+    const { data: newUser } = await supabase.from('users').insert(...);
+}
+const userId = existingUser?.id || newUser?.id; // newUser is undefined!
+
+// AFTER (fixed)
+let newUser = null; // Declare in outer scope
+if (!existingUser) {
+    const { data: createdUser } = await supabase.from('users').insert(...);
+    newUser = createdUser; // Assign to outer scope
+}
+const userId = existingUser?.id || newUser?.id; // Works!
+```
+
+### #7 - assign-role Uses Supabase Auth API ✅
+**File**: `src/routes/admin.js`
+
+**Fix**: Changed from:
+```javascript
+// BEFORE - Wrong!
+const { data: { users } } = await supabase.auth.admin.listUsers();
+const user = users?.find(u => u.email === email);
+```
+
+To:
+```javascript
+// AFTER - Correct!
+const { data: user } = await supabase
+  .from('users')
+  .select('id, email, role')
+  .eq('email', email.toLowerCase())
+  .single();
+```
+
+### #9 - Password Reset No Session Invalidation ✅
+**Files**:
+- `src/database/migrations/001_add_password_changed_at.sql` (NEW)
+- `src/middleware/authMiddleware.js` (UPDATED)
+- `src/services/hybridUserService.js` (UPDATED)
+- `src/routes/admin.js` (UPDATED)
+
+**How it works**:
+1. `password_changed_at` column added to users table
+2. When password changes, this timestamp is updated
+3. Auth middleware checks if token's `iat` <= `password_changed_at`
+4. If token is older → 401 "Please login again"
+
+**Test Result**:
+```
+✅ Password updated in Supabase (sessions invalidated)
+❌ Token invalidated (optional auth): issued before password change
+GET /api/users/me → 401 (old token rejected)
+POST /api/users/login → 200 (new password works)
+```
+
+---
+
+## NOT FIXED (Would Break Things)
+
+### #1 - Single Role Limitation ❌
+**Risk**: 🔴 HIGH
+**Reason**: Requires:
+- DB schema change (add roles array or junction table)
+- Rewrite ALL role check middleware
+- Update ALL endpoints that check roles
+- Mobile app changes
+
+### #5 - No Role Hierarchy/Permissions ❌
+**Risk**: 🔴 HIGH  
+**Reason**: Requires complete auth system refactor
+
+---
+
+## NEW FILES CREATED
+
+1. `docs/ROLE_SYSTEM.md` - Comprehensive role documentation for mobile app
+2. `docs/TEST_CREDENTIALS.md` - Test accounts for all roles
+3. `src/database/migrations/001_add_password_changed_at.sql` - DB migration
+
+---
+
+## TEST ACCOUNTS (Password: TestPass123!)
+
+| Role | Email |
+|------|-------|
+| Admin | admin2@temple.com |
+| Board | testboard@temple.com |
+| Community Owner | testcommunityowner@temple.com |
+| Volunteer Head | testvolunteerhead@temple.com |
+| Priest | testpriest@temple.com |
+| Finance Team | testfinance@temple.com |
+| Community Member | testmember@temple.com |
+| User | testuser@temple.com |
+
+Note: Some passwords were changed during testing. Check latest password in docs/TEST_CREDENTIALS.md
